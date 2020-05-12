@@ -9,7 +9,7 @@
   Tank Bot uses:
 
   4 micro geared dc motors
-  2 L9110S DC Motor Drivers
+  2 HG7881 DC Motor Drivers
   1 Arduino Nano with Expansion board
   1 NRF24l01 2.4GHz RF Transceiver
   1 Breadboard
