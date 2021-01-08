@@ -11,11 +11,10 @@
   4 x 6 Volt DC Hobby Motors Motors + Tires
   2 x L9110S DC Motor Drivers
   1 x Arduino Nano
-  1 x Nano Breakout Board with NRF Headers
+  1 x Nano Breakout Board with headers for NRF2401 Module
   1 x NRF24l01 2.4GHz RF Transceiver
-  1 x 6 volt NiMh Battery
-  1 x 5 AA Battery Holder
-  5 x 1.2 Volt NiMh AA Batteries
+  2 x 5 AA Battery Holder
+  10 x 1.2 Volt NiMh AA Batteries
   1 x Breadboard Half Size
 
     The motor driver uses two GPIO pins to control each channel.  These can
