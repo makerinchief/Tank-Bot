@@ -4,18 +4,18 @@
 #include <SoftPWM.h>
 
 //Left Side
-int motor1_Apin = 5;
-int motor1_Bpin = 6;
+int motor1_Apin = 5; //Hardware PWM
+int motor1_Bpin = 6; //Hardware PWM
 int motor2_Apin = 7;
 int motor2_Bpin = 8;
 
 //Right Side
-int motor3_Apin = 14;
-int motor3_Bpin = 15;
-int motor4_Apin = 16;
-int motor4_Bpin = 17;
+int motor3_Apin = 14;  //A0
+int motor3_Bpin = 15;  //A1
+int motor4_Apin = 16;  //A2
+int motor4_Bpin = 17;  //A3
 
-void SETUP_MOTORS() {
+void SetupMotors() {
 
   SoftPWMBegin();
 
@@ -30,65 +30,65 @@ void SETUP_MOTORS() {
 
 }
 
-void testTank(int _speed) {
+void TestTank(int motorSpeed) {
 
   Serial.println("FORWARD");
-  left_Forward(_speed);
-  right_Forward(_speed);
+  LeftForward(motorSpeed);
+  RightForward(motorSpeed);
   delay(2000);
-  left_Stop();
-  right_Stop();
+  LeftStop();
+  RightStop();
   delay(2000);
 
   Serial.println("BACKWARD");
-  left_Backward(_speed);
-  right_Backward(_speed);
+  LeftBackward(motorSpeed);
+  RightBackward(motorSpeed);
   delay(2000);
-  left_Stop();
-  right_Stop();
+  LeftStop();
+  RightStop();
   delay(2000);
 
   Serial.println("RIGHT");
-  left_Forward(_speed);
-  right_Backward(_speed);
+  LeftForward(motorSpeed);
+  RightBackward(motorSpeed);
   delay(2000);
-  left_Stop();
-  right_Stop();
+  LeftStop();
+  RightStop();
   delay(2000);
 
   Serial.println("LEFT");
-  left_Backward(_speed);
-  right_Forward(_speed);
+  LeftBackward(motorSpeed);
+  RightForward(motorSpeed);
   delay(2000);
-  left_Stop();
-  right_Stop();
+  LeftStop();
+  RightStop();
   delay(2000);
   
 }
 
 
-
-void left_Forward(int _speed) {
+//Never have a motor's A and B pins on at the same time!
+void LeftForward(int motorSpeed) {
 
   //Left Side
-  SoftPWMSet(motor1_Apin, _speed);
+  SoftPWMSet(motor1_Apin, motorSpeed);
   SoftPWMSet(motor1_Bpin, 0);
-  SoftPWMSet(motor2_Apin, _speed);
+  SoftPWMSet(motor2_Apin, motorSpeed);
   SoftPWMSet(motor2_Bpin, 0);
 
 }
 
-void left_Backward(int _speed) {
+void LeftBackward(int motorSpeed) {
 
   //Left Side
   SoftPWMSet(motor1_Apin, 0);
-  SoftPWMSet(motor1_Bpin, _speed);
+  SoftPWMSet(motor1_Bpin, motorSpeed);
   SoftPWMSet(motor2_Apin, 0);
-  SoftPWMSet(motor2_Bpin, _speed);
+  SoftPWMSet(motor2_Bpin, motorSpeed);
 
 }
 
-void left_Stop() {
+void LeftStop() {
 
   //Left Side
   SoftPWMSet(motor1_Apin, 0);
@@ -98,26 +98,26 @@ void left_Stop() {
 
 }
 
-void right_Forward(int _speed) {
+void RightForward(int motorSpeed) {
 
   //Right Side
-  SoftPWMSet(motor3_Apin, _speed);
+  SoftPWMSet(motor3_Apin, motorSpeed);
   SoftPWMSet(motor3_Bpin, 0);
-  SoftPWMSet(motor4_Apin, _speed);
+  SoftPWMSet(motor4_Apin, motorSpeed);
   SoftPWMSet(motor4_Bpin, 0);
 
 }
 
-void right_Backward(int _speed) {
+void RightForward(int motorSpeed) {
 
   //Right Side
   SoftPWMSet(motor3_Apin, 0);
-  SoftPWMSet(motor3_Bpin, _speed);
+  SoftPWMSet(motor3_Bpin, motorSpeed);
   SoftPWMSet(motor4_Apin, 0);
-  SoftPWMSet(motor4_Bpin, _speed);
+  SoftPWMSet(motor4_Bpin, motorSpeed);
 
 }
-void right_Stop() {
+void RightStop() {
 
   //Right Side
   SoftPWMSet(motor3_Apin, 0);

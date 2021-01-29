@@ -1,4 +1,5 @@
 /*
+
   Tank Bot
   Justin C Kirk 2020
 
@@ -29,7 +30,7 @@
 RF24 tankRadio(10, 9); // CE, CSN
 const byte tankBotAddress[6] = "00001";
 
-struct RECEIVE_DATA {
+struct ControllerData {
 
   int16_t left_xAxis;
   int16_t left_yAxis;
@@ -41,18 +42,18 @@ struct RECEIVE_DATA {
 
 };
 
-RECEIVE_DATA dataGot;
+ControllerData controller;
 
-const int16_t dataCount = 6;
-
-int16_t dataThreshold = 55;
-int16_t dataMax = 255;
+int16_t axisThreshold = 55;
+int16_t axisMax = 255;
 
 unsigned long tankCurrent;
 unsigned long tankPrevious;
-unsigned long tankReadPrevious;
-const long tankInterval = 100;
+long tankInterval = 10;
 
+
+
+//Unused GPIO Pins:    0,1,2,3,4,  A5, A6, A7
 int greenLed = 3;
 int redLed = 4;
 
@@ -62,12 +63,11 @@ void setup() {
   Serial.begin(9600);
 
   tankRadio.begin();
-
   tankRadio.openReadingPipe(0, tankBotAddress); // 00001
   tankRadio.setPALevel(RF24_PA_MIN);
   tankRadio.startListening();
 
-  SETUP_MOTORS();
+  SetupMotors();
 
   pinMode(greenLed, OUTPUT);
   pinMode(redLed, OUTPUT);
@@ -76,93 +76,99 @@ void setup() {
 
 void loop() {
 
-  //testTank(100);
-  //testRadio_Recieve();
-  getController();
+  //TestTank(100);
+  //TestRadioTest();
+  GetController();
 
 }
 
-void testRadio_Recieve() {
+void TestRadioTest() {
 
   if (tankRadio.available()) {
     char receiveText[32] = "";
     tankRadio.read(&receiveText, sizeof(receiveText));
-    Serial.print("TankBot Reads: ");
+    Serial.print("TankBot Got: ");
     Serial.println(receiveText);
   }
 
 }
 
-void getController() {
+void GetController() {
 
-  if (tankRadio.available()) {
+  tankCurrent = millis();
+
+  if (tankCurrent - tankPrevious > tankInterval) {
+
+    if (tankRadio.available()) {
+
+      char receiveText[32] = "";
+      tankRadio.read(&controller, sizeof(ControllerData));
+
+      //print raw
+      //PrintControllerData();
+
+      //Remap values to send to motor driver
+      controller.left_yAxis = map(controller.left_yAxis, 0, 1023, -255, 255);
+      controller.right_yAxis = map(controller.right_yAxis, 0, 1023, -255, 255);
+
+      //print adjusted
+      //PrintControllerData();
+
+      //Control Left Side
+      if (controller.left_yAxis > dataThreshold) {
+        LeftForward(controller.left_yAxis / 2);
+      } else if (controller.left_yAxis < -dataThreshold) {
+        LeftBackward(abs(controller.left_yAxis / 2));
+      } else {
+        LeftStop();
+      }
+
+      //Control Right Side
+      if (controller.right_yAxis > dataThreshold) {
+        RightForward(controller.right_yAxis / 2);
+      } else if (controller.right_yAxis < -dataThreshold) {
+        RightBackward(abs(controller.right_yAxis / 2));
+      } else {
+        RightStop();
+      }
 
 
-    tankRadio.read(&dataGot, sizeof(dataGot));
+      //Turn on LEDs
+      if (controller.left_button == 1) {
+        digitalWrite(greenLed, HIGH);
+      } else {
+        digitalWrite(greenLed, LOW);
+      }
 
-    //print raw
-    //printData();
+      if (controller.right_button == 1) {
+        digitalWrite(redLed, HIGH);
+      } else {
+        digitalWrite(redLed, LOW);
+      }
 
-    //remap
-    dataGot.left_yAxis = map(dataGot.left_yAxis, 0, 1023, -255, 255);
-    dataGot.right_yAxis = map(dataGot.right_yAxis, 0, 1023, -255, 255);
-
-    //print adjusted
-    //printData();
-
-    //Control Left Side
-    if (dataGot.left_yAxis > dataThreshold) {
-      left_Forward(dataGot.left_yAxis/2);
-    } else if (dataGot.left_yAxis < -dataThreshold) {
-      left_Backward(abs(dataGot.left_yAxis/2));
-    } else {
-      left_Stop();
     }
 
-    //Control Right Side
-
-    if (dataGot.right_yAxis > dataThreshold) {
-      right_Forward(dataGot.right_yAxis/2);
-    } else if (dataGot.right_yAxis < -dataThreshold) {
-      right_Backward(abs(dataGot.right_yAxis/2));
-    } else {
-      right_Stop();
-    }
-
-    //Turn on LEDs
-
-    if (dataGot.left_button == 1) {
-      digitalWrite(greenLed, HIGH);
-    } else {
-      digitalWrite(greenLed, LOW);
-    }
-
-    if (dataGot.right_button == 1) {
-      digitalWrite(redLed, HIGH);
-    } else {
-      digitalWrite(redLed, LOW);
-    }
-
+    tankPrevious = tankCurrent;
   }
 
 }
 
 
 
-void printData() {
+void PrintControllerData() {
 
-  Serial.print(dataGot.left_xAxis);
+  Serial.print(controller.left_xAxis);
   Serial.print("  ");
-  Serial.print(dataGot.left_yAxis);
+  Serial.print(controller.left_yAxis);
   Serial.print("  ");
-  Serial.print(dataGot.left_button);
+  Serial.print(controller.left_button);
   Serial.print("  ");
 
-  Serial.print(dataGot.right_xAxis);
+  Serial.print(controller.right_xAxis);
   Serial.print("  ");
-  Serial.print(dataGot.right_yAxis);
+  Serial.print(controller.right_yAxis);
   Serial.print("  ");
-  Serial.print(dataGot.right_button);
+  Serial.print(controller.right_button);
   Serial.println();
 
 }
