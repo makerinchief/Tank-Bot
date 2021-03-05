@@ -1,0 +1,8 @@
+{
+    "board": "arduino:avr:nano",
+    "configuration": "cpu=atmega328old",
+    "port": "COM10",
+    "sketch": "Tank_Bot_Control\\Tank_Bot_Control.ino",
+    "debugger": "jlink",
+    "output": "../ArduinoOutput"
+}

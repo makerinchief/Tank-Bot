@@ -1,5 +1,13 @@
-//SoftPWM Library by Brett Hagman
-//  https://github.com/bhagman/SoftPWM
+/*  
+
+  SoftPWM Library by Brett Hagman
+  https://github.com/bhagman/SoftPWM
+
+    The motor driver uses two GPIO pins to control each motor.  These can
+  be driven using PWM.  Using the SoftPWM library, non hardware PWM pins can
+  be used as a software PWM pin.
+
+*/
 
 #include <SoftPWM.h>
 
@@ -108,7 +116,7 @@ void RightForward(int motorSpeed) {
 
 }
 
-void RightForward(int motorSpeed) {
+void RightBackward(int motorSpeed) {
 
   //Right Side
   SoftPWMSet(motor3_Apin, 0);
