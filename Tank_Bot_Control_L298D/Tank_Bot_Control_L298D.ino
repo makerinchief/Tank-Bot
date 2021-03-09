@@ -4,7 +4,7 @@
   Justin C Kirk 2020
 
   justin.c.kirk@gmail.com
-  https://www.makerinchief.com/12
+  https://www.makerinchief.com/
   https://github.com/makerinchief/TankBot
 
   Tank Bot Parts:
@@ -24,6 +24,7 @@
 
 //NRFLite is used to make communication easy
 //https://github.com/dparson55/NRFLite
+
 #include <SPI.h>
 #include <NRFLite.h>
 
@@ -80,19 +81,17 @@ void loop() {
 //  tankCurrent = millis();
 //
 //  if (tankCurrent - tankPrevious > tankInterval) {
-//    //TestController();
-//    GetController();
+//    TestController();
+//    //GetController();
 //    //PrintData();
 //    tankPrevious = tankCurrent;
 //  }
 
-
-
-  while (tankRadio.hasData() ) {
-    //TestController();
-    GetController();
-    //PrintData();
-  }
+    while (tankRadio.hasData() ) {
+      //TestController();
+      GetController();
+      //PrintData();
+    }
 
 }
 
@@ -151,8 +150,7 @@ void GetController() {
 void TestController() {
 
   tankRadio.readData(&controllerData);
-
-  //PrintData();
+  PrintData();
 
 }
 

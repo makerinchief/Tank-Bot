@@ -59,7 +59,7 @@ void TestTank(int motorSpeed) {
 
 //Never have a motor's A and B pins on at the same time!
 void LeftForward(int motorSpeed) {
-  Serial.println("Left Foward");
+  
   analogWrite(leftPwm, motorSpeed);
   digitalWrite(leftA, LOW);
   digitalWrite(leftB, HIGH);
@@ -83,7 +83,6 @@ void LeftStop() {
 }
 
 void RightForward(int motorSpeed) {
-
 
   analogWrite(rightPwm, motorSpeed);
   digitalWrite(rightA, LOW);
